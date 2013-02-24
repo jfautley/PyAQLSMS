@@ -14,6 +14,10 @@ def main():
                         help="Password for aql API")
     op.add_option ("-i", "--interactive", action="store_true", default=False,
                         help="Prompt for username/password, if not specified")
+    op.add_option ("-o", "--originator", dest="originator", default=None,
+                        help="SMS originator ID")
+    op.add_option ("-f", "--flash", action="store_true", default=False,
+                        help="Send SMS as 'flash' message")
 
     opts, args = op.parse_args()
 
@@ -29,7 +33,11 @@ def main():
     destination = args.pop(0)
     message     = args.pop(0)
 
-    print "Sending [%s] to [%s], using auth [%s]/[%s]" % (message, destination, opts.username, opts.password)
+    print "Sending [%s] to [%s], using auth as [%s]" % (message, destination, opts.username)
+
+    sms = aqlsms.aqlSMS(opts.username, opts.password, originator=opts.originator)
+
+    sms.sendMessage (message, destination)
 
 if __name__ == "__main__":
     main()
